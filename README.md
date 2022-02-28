@@ -22,5 +22,6 @@ pipenv install
 
 -   [Requests](https://docs.python-requests.org/en/latest/) - Create the connection to a thread
 -   [Praw](https://github.com/praw-dev/praw) - Parse comments
+-   [TextBlob](https://github.com/sloria/TextBlob) - Get comment sentiment
 -   [Pandas](https://github.com/pandas-dev/pandas) - Store comment information in a DataFrame
 -   [Bokeh](https://github.com/bokeh/bokeh) - Create the plot
