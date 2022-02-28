@@ -1,5 +1,4 @@
 import os
-from typing import Text
 import praw
 from praw.models import MoreComments
 from dotenv import load_dotenv
@@ -8,6 +7,7 @@ from textblob import TextBlob
 
 class ThreadParser:
     """ A class to parse Reddit comments
+    
     Attributes
     ----------
     reddit : Reddit
@@ -29,8 +29,8 @@ class ThreadParser:
         "ids": [],
         "bodies": [],
         "times": [],
-        "polarity": [],
-        "subjectivity": []
+        "polarities": [],
+        "subjectivities": []
         }
 
 
@@ -46,7 +46,6 @@ class ThreadParser:
             raise ValueError("Invalid URL")
 
         submission = self.reddit.submission(url=thread_url)
-        print(submission.title)
 
         # Parse all comments
         submission.comments.replace_more()
@@ -55,7 +54,7 @@ class ThreadParser:
                 self.comments["ids"].append(comment.id)
                 self.comments["bodies"].append(comment.body)
                 self.comments["times"].append(comment.created_utc)
-                self.comments["polarity"].append(TextBlob(comment.body).sentiment.polarity)
-                self.comments["subjectivity"].append(TextBlob(comment.body).sentiment.subjectivity)
+                self.comments["polarities"].append(TextBlob(comment.body).sentiment.polarity)
+                self.comments["subjectivities"].append(TextBlob(comment.body).sentiment.subjectivity)
 
         return self.comments
