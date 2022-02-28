@@ -1,7 +1,9 @@
 import os
+from typing import Text
 import praw
 from praw.models import MoreComments
 from dotenv import load_dotenv
+from textblob import TextBlob
 
 
 class ThreadParser:
@@ -26,7 +28,9 @@ class ThreadParser:
         self.comments = {
         "ids": [],
         "bodies": [],
-        "times": []
+        "times": [],
+        "polarity": [],
+        "subjectivity": []
         }
 
 
@@ -35,7 +39,7 @@ class ThreadParser:
         :param thread_url: url to a thread
         :type thread_url: str
         :rtype dict
-        :return a dictionary of comments containing ID, body, and time
+        :return a dictionary of comments containing ID, body, polarity, subjectivity and time
         """
 
         if (("https://www.reddit.com/r/" not in thread_url) or ("/comments/" not in thread_url)):
@@ -51,6 +55,7 @@ class ThreadParser:
                 self.comments["ids"].append(comment.id)
                 self.comments["bodies"].append(comment.body)
                 self.comments["times"].append(comment.created_utc)
+                self.comments["polarity"].append(TextBlob(comment.body).sentiment.polarity)
+                self.comments["subjectivity"].append(TextBlob(comment.body).sentiment.subjectivity)
 
         return self.comments
-
