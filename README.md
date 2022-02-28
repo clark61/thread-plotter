@@ -18,6 +18,14 @@ To install the required dependencies:
 pipenv install
 ```
 
+Praw will need several keys/tokens which can be generated [here](https://ssl.reddit.com/prefs/apps/):
+
+```env
+APP_ID = id
+APP_SECRET = secret
+USER_AGENT = app name
+```
+
 ### Dependencies
 
 -   [Requests](https://docs.python-requests.org/en/latest/) - Create the connection to a thread
