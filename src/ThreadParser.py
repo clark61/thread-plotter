@@ -7,7 +7,7 @@ from textblob import TextBlob
 
 class ThreadParser:
     """ A class to parse Reddit comments
-    
+
     Attributes
     ----------
     reddit : Reddit
@@ -26,11 +26,11 @@ class ThreadParser:
         )
 
         self.comments = {
-        "ids": [],
-        "bodies": [],
-        "times": [],
-        "polarities": [],
-        "subjectivities": []
+            "ids": [],
+            "bodies": [],
+            "times": [],
+            "polarities": [],
+            "subjectivities": []
         }
 
 
