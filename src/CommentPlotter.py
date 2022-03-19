@@ -34,15 +34,20 @@ class CommentPlotter:
         self.comments_df = self.comments_df.dropna()
         
         source = ColumnDataSource(self.comments_df)
-        sentimentPlot = figure(title="Sentiment Through Time", x_axis_label="Time", x_axis_type="datetime", y_axis_label="Sentiment", y_range=Range1d(-1, 1),)
-        countPlot = figure(title="Count of Comments Through Time", x_axis_label="Time", x_axis_type="datetime", y_axis_label="Count")
+        sentiment_plot = figure(title="Mean Sentiment of Comments per Minute", x_axis_label="Time (UTC)", x_axis_type="datetime", y_axis_label="Sentiment", y_range=Range1d(-1, 1))
+        sentiment_plot.sizing_mode = "scale_width"
+
+        count_plot = figure(title="Count of Comments per Minute", x_axis_label="Time (UTC)", x_axis_type="datetime", y_axis_label="Count")
+        count_plot.sizing_mode = "scale_width"
 
         try:
-            sentimentPlot.line(x="datetimes", y="polarities", source=source)
-            countPlot.line(x="datetimes", y="times", source=source)
+            sentiment_plot.line(x="datetimes", y="polarities", source=source)
+            count_plot.line(x="datetimes", y="times", source=source)
         except:
             raise ValueError("DataFrame does not have required fields")
 
         curdoc().theme = "dark_minimal"
 
-        show(column(sentimentPlot, countPlot))
+        columns = column(sentiment_plot, count_plot)
+        columns.sizing_mode = "scale_width"
+        show(columns)
