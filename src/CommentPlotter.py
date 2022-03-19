@@ -1,5 +1,7 @@
 import pandas as pd
 from bokeh.plotting import figure, show
+from bokeh.models import ColumnDataSource, Range1d
+from bokeh.layouts import column
 from bokeh.io import curdoc
 
 class CommentPlotter:
@@ -23,13 +25,24 @@ class CommentPlotter:
     def create_plot(self):
         """ Plots the sentiment of a thread and opens the plot in a browser
         """
-        plot = figure(title="Sentiment Through Time", x_axis_label="Time", y_axis_label="Sentiment")
         
+
+        self.comments_df = self.comments_df.groupby(pd.Grouper(key="datetimes", freq="1min")).agg({
+            "times": "count", 
+            "subjectivities": "mean", 
+            "polarities": "mean"})
+        self.comments_df = self.comments_df.dropna()
+        
+        source = ColumnDataSource(self.comments_df)
+        sentimentPlot = figure(title="Sentiment Through Time", x_axis_label="Time", x_axis_type="datetime", y_axis_label="Sentiment", y_range=Range1d(-1, 1),)
+        countPlot = figure(title="Count of Comments Through Time", x_axis_label="Time", x_axis_type="datetime", y_axis_label="Count")
+
         try:
-            plot.line(self.comments_df["times"], self.comments_df["polarities"])
+            sentimentPlot.line(x="datetimes", y="polarities", source=source)
+            countPlot.line(x="datetimes", y="times", source=source)
         except:
             raise ValueError("DataFrame does not have required fields")
 
         curdoc().theme = "dark_minimal"
 
-        show(plot)
+        show(column(sentimentPlot, countPlot))
