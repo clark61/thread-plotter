@@ -23,22 +23,31 @@ class CommentPlotter:
             raise ValueError("Could not create a DataFrame from the given input")
 
     def create_plot(self):
-        """ Plots the sentiment of a thread and opens the plot in a browser
-        """
+        """ Plots the sentiment of a thread and opens the plot in a browser """
         
-
-        self.comments_df = self.comments_df.groupby(pd.Grouper(key="datetimes", freq="1min")).agg({
+        self.comments_df = self.comments_df.groupby(pd.Grouper(key="datetimes", freq="30s")).agg({
             "times": "count", 
             "subjectivities": "mean", 
             "polarities": "mean"})
         self.comments_df = self.comments_df.dropna()
         
         source = ColumnDataSource(self.comments_df)
-        sentiment_plot = figure(title="Mean Sentiment of Comments per Minute", x_axis_label="Time (UTC)", x_axis_type="datetime", y_axis_label="Sentiment", y_range=Range1d(-1, 1))
-        sentiment_plot.sizing_mode = "scale_width"
+        sentiment_plot = figure(
+            title="Mean Sentiment of Comments per 30s Interval", 
+            x_axis_label="Time", 
+            x_axis_type="datetime", 
+            y_axis_label="Sentiment", 
+            y_range=Range1d(-1, 1), 
+            plot_width=1000, 
+            plot_height=550)
 
-        count_plot = figure(title="Count of Comments per Minute", x_axis_label="Time (UTC)", x_axis_type="datetime", y_axis_label="Count")
-        count_plot.sizing_mode = "scale_width"
+        count_plot = figure(
+            title="Count of Comments per 30s Interval", 
+            x_axis_label="Time", 
+            x_axis_type="datetime", 
+            y_axis_label="Count", 
+            plot_width=1000, 
+            plot_height=550)
 
         try:
             sentiment_plot.line(x="datetimes", y="polarities", source=source)
